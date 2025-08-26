@@ -13,33 +13,43 @@
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<PublicizeAsReferenceAssemblies>false</PublicizeAsReferenceAssemblies>
 		<WarningLevel>5</WarningLevel>
+
+        <!-- We want to use local assemblies when they're available - this helps with debugging & goto definition -->
+        <!-- Assume we are in `{install_folder}/Mods/Loadout-Compositing/Source/`: -->
+        <LocalPath>../../../../Contents/Resources/Data/Managed</LocalPath>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4518" />
 		<PackageReference Include="Lib.Harmony" Version="2.3.6" ExcludeAssets="runtime" />
 		<PackageReference Include="Krafs.Publicizer" Version="2.3.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<Publicize Include="Assembly-CSharp" />
 		<Reference Include="IHoldMultipleThings">
 			<HintPath>..\..\1.6\Assemblies\IHoldMultipleThings.dll</HintPath>
 		</Reference>
-		<!--Reference Include="Assembly-CSharp">
-			<HintPath>..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="UnityEngine.CoreModule">
-			<HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="UnityEngine.IMGUIModule">
-			<HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="UnityEngine.TextRenderingModule">
-			<HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-			<Private>False</Private>
-		</Reference-->
-	</ItemGroup>
+
+        <!-- <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.*" Condition="!Exists('$(LocalPath)/Assembly-CSharp.dll')" /> -->
+    </ItemGroup>
+	
+ 		<!-- Prefer local RimWorld assemblies if the path exists -->
+    <ItemGroup Condition="Exists('$(LocalPath)')">
+            <Reference Include="Assembly-CSharp">
+                    <HintPath>$(LocalPath)/Assembly-CSharp.dll</HintPath>
+                    <Private>False</Private>
+            </Reference>
+            <Reference Include="UnityEngine.CoreModule">
+                    <HintPath>$(LocalPath)/UnityEngine.CoreModule.dll</HintPath>
+                    <Private>False</Private>
+            </Reference>
+            <Reference Include="UnityEngine.IMGUIModule">
+                    <HintPath>$(LocalPath)/UnityEngine.IMGUIModule.dll</HintPath>
+                    <Private>False</Private>
+            </Reference>
+            <Reference Include="UnityEngine.TextRenderingModule">
+                    <HintPath>$(LocalPath)/UnityEngine.TextRenderingModule.dll</HintPath>
+                    <Private>False</Private>
+            </Reference>
+
+        <Publicize Include="Assembly-CSharp" />
+    </ItemGroup>
 </Project>
