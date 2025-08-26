@@ -185,7 +185,7 @@ public class WorkGiver_HaulToInventory : WorkGiver_HaulGeneral
 					nextThingLeftOverCount = CountPastCapacity(pawn, nextThing, encumberance);
 					job.countQueue.Pop();
 					job.countQueue.Add(nextThingLeftOverCount);
-					Log.Message($"Inventory allocated, will carry {nextThing}:{nextThingLeftOverCount}");
+					Log.Message($"{pawn} Inventory allocated, will carry {nextThing}:{nextThingLeftOverCount}");
 
 					// We are now out of inventory space - and should bail right away.
 					break;
@@ -354,7 +354,7 @@ public class WorkGiver_HaulToInventory : WorkGiver_HaulGeneral
 
 					storeCellCapacity[storeCell] = new(nextThing, CapacityAt(nextThing, nextStoreCell, map));
 
-					Log.Message($"New cell for unstackable {nextThing} = {nextStoreCell}");
+					Log.Message($"{pawn} New cell for unstackable {nextThing} = {nextStoreCell}");
 				}
 				else
 				{
@@ -364,12 +364,12 @@ public class WorkGiver_HaulToInventory : WorkGiver_HaulGeneral
 
 					storeCellCapacity[storeCell] = new(nextThing, innerInteractableThingOwner.GetCountCanAccept(nextThing));
 
-					Log.Message($"New haulDestination for unstackable {nextThing} = {haulDestination}");
+					Log.Message($"{pawn} New haulDestination for unstackable {nextThing} = {haulDestination}");
 				}
 			}
 			else
 			{
-				Log.Message($"{nextThing} can't stack with allocated cells");
+				Log.Message($"{pawn} {nextThing} can't stack with allocated cells");
 
 				if (job.targetQueueA.NullOrEmpty())
 				{
@@ -408,7 +408,7 @@ public class WorkGiver_HaulToInventory : WorkGiver_HaulGeneral
 					var capacity = CapacityAt(nextThing, nextStoreCell, map) - capacityOver;
 					storeCellCapacity[storeCell] = new(nextThing, capacity);
 
-					Log.Message($"New cell {nextStoreCell}:{capacity}, allocated extra {capacityOver}");
+					Log.Message($"{pawn} New cell {nextStoreCell}:{capacity}, allocated extra {capacityOver}");
 				}
 				else
 				{
@@ -420,19 +420,19 @@ public class WorkGiver_HaulToInventory : WorkGiver_HaulGeneral
 
 					storeCellCapacity[storeCell] = new(nextThing, capacity);
 
-					Log.Message($"New haulDestination {nextHaulDestination}:{capacity}, allocated extra {capacityOver}");
+					Log.Message($"{pawn} New haulDestination {nextHaulDestination}:{capacity}, allocated extra {capacityOver}");
 				}
 			}
 			else
 			{
 				count -= capacityOver;
 				job.countQueue.Add(count);
-				Log.Message($"Nowhere else to store, allocated {nextThing}:{count}");
+				Log.Message($"{pawn} Nowhere else to store, allocated {nextThing}:{count}");
 				return false;
 			}
 		}
 		job.countQueue.Add(count);
-		Log.Message($"{nextThing}:{count} allocated");
+		Log.Message($"{pawn} {nextThing}:{count} allocated");
 		return true;
 	}
 
