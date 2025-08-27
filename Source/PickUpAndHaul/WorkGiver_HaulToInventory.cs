@@ -154,17 +154,6 @@ public class WorkGiver_HaulToInventory : WorkGiver_HaulGeneral
 		{
 			[storeTarget] = new(nextThing, capacityStoreCell)
 		};
-		//skipTargets = new() { storeTarget };
-		skipCells = new();
-		skipThings = new();
-		if (storeTarget.container != null)
-		{
-			skipThings.Add(storeTarget.container);
-		}
-		else
-		{
-			skipCells.Add(storeTarget.cell);
-		}
 
 		bool Validator(Thing t)
 			=> (!isUrgent || designationManager.DesignationOn(t)?.def == haulUrgentlyDesignation)
@@ -195,8 +184,6 @@ public class WorkGiver_HaulToInventory : WorkGiver_HaulGeneral
 		while ((nextThing = GetClosestAndRemove(lastThing.Position, map, haulables, PathEndMode.ClosestTouch,
 			TraverseParms.For(pawn), distanceToSearchMore, Validator)) != null);
 
-		skipCells = null;
-		skipThings = null;
 		return job;
 	}
 
@@ -431,10 +418,6 @@ public class WorkGiver_HaulToInventory : WorkGiver_HaulGeneral
 		Log.Message($"{pawn} {nextThing}:{count} allocated");
 		return true;
 	}
-
-	//public static HashSet<StoreTarget> skipTargets;
-	public static HashSet<IntVec3> skipCells;
-	public static HashSet<Thing> skipThings;
 
 	public static float AddedEncumberance(Pawn pawn, Thing thing)
 		=> thing.stackCount * thing.GetStatValue(StatDefOf.Mass) / MassUtility.Capacity(pawn);
