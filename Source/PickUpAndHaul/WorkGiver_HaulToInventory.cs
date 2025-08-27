@@ -1,6 +1,10 @@
 ﻿using System.Linq;
 
 namespace PickUpAndHaul;
+
+// JobFailReason.Is("NoEmptyPlaceLower".Translate());
+
+
 public class WorkGiver_HaulToInventory : WorkGiver_HaulGeneral
 {
 	//Thanks to AlexTD for the more dynamic search range
@@ -103,7 +107,6 @@ public class WorkGiver_HaulToInventory : WorkGiver_HaulGeneral
 		}
 		else
 		{
-			JobFailReason.Is("NoEmptyPlaceLower".Translate());
 			return null;
 		}
 
@@ -304,19 +307,12 @@ public class WorkGiver_HaulToInventory : WorkGiver_HaulGeneral
 
 	public static int CapacityAt(Thing thing, IntVec3 storeCell, Map map)
 	{
-		if (HoldMultipleThings_Support.CapacityAt(thing, storeCell, map, out var capacity))
-		{
-			Log.Message($"Found external capacity of {capacity}");
-			return capacity;
-		}
-
 		return storeCell.GetItemStackSpaceLeftFor(map, thing.def);
 	}
 
 	public static bool Stackable(Thing nextThing, KeyValuePair<StoreTarget, CellAllocation> allocation)
 		=> nextThing == allocation.Value.allocated
-		|| allocation.Value.allocated.CanStackWith(nextThing)
-		|| HoldMultipleThings_Support.StackableAt(nextThing, allocation.Key.cell, nextThing.Map);
+		|| allocation.Value.allocated.CanStackWith(nextThing);
 
 	public static bool AllocateThingAtCell(Dictionary<StoreTarget, CellAllocation> storeCellCapacity, Pawn pawn, Thing nextThing, Job job)
 	{
